@@ -454,6 +454,11 @@ class MermaidZoomInstance {
 
       document.body.appendChild(this.container);
       this.container.classList.add("is-fullscreen");
+      // Inline sizes set by auto-size / drag-resize would override the
+      // `.is-fullscreen` CSS. Clear them so fullscreen can fill the window;
+      // they are restored from `fullscreenRestore` on exit.
+      this.container.style.width = "";
+      this.container.style.height = "";
       this.fullscreenButton.textContent = "⤢";
       document.body.classList.add("mfz-fullscreen-open");
       this.resetSoon();

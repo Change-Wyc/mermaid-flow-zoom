@@ -23,11 +23,12 @@
 .mfz-container.is-fullscreen {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 9999;
   width: 100vw;
   height: 100vh;
   max-height: none;
   margin: 0;
+  border: none;
   border-radius: 0;
   resize: none;
   background: var(--background-primary);
