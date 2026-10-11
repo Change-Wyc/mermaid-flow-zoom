@@ -20,6 +20,15 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--interactive-accent) 60%, transparent);
 }
 
+/* Live Preview: the container is the block's only frame, instead of sitting inset in Obsidian's hover ring. */
+.markdown-source-view.mod-cm6 .cm-embed-block .mfz-container {
+  margin: 0;
+}
+
+.markdown-source-view.mod-cm6 .cm-embed-block:not(.cm-table-widget, .cm-lang-base):has(.mfz-container):hover {
+  box-shadow: none;
+}
+
 .mfz-container.is-fullscreen {
   position: fixed;
   inset: 0;
