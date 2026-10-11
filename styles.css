@@ -131,7 +131,3 @@ body.mfz-fullscreen-open {
 .mfz-container.mfz-kind-sequence {
   min-height: 300px;
 }
-
-.mfz-container.mfz-kind-sequence .mfz-help::after {
-  content: "；时序图默认按宽度适配，纵向可拖拽查看";
-}

@@ -1,10 +1,36 @@
-const { Plugin, Notice } = require("obsidian");
+const { Plugin, Notice, getLanguage } = require("obsidian");
 
 const PLUGIN_ID = "mermaid-flow-zoom";
 const MIN_SCALE = 0.05;
 const MAX_SCALE = 12;
 const ZOOM_STEP = 1.18;
 const EDGE_SCROLL_ZONE = 46;
+
+const STRINGS = {
+  en: {
+    zoomOut: "Zoom out",
+    zoomIn: "Zoom in",
+    reset: "Reset and fit",
+    fullscreen: "Fullscreen",
+    help: "Scroll to zoom, drag to pan, Shift or horizontal scroll to move sideways, drag the lower-right corner to resize",
+    sequenceHelp: "; sequence diagrams fit to width, drag to scroll vertically",
+  },
+  zh: {
+    zoomOut: "缩小",
+    zoomIn: "放大",
+    reset: "重置并自适应",
+    fullscreen: "全屏查看",
+    help: "滚轮缩放，拖拽平移，Shift/横向滚轮左右移动，拖动右下角调整大小",
+    sequenceHelp: "；时序图默认按宽度适配，纵向可拖拽查看",
+  },
+};
+
+function t(key) {
+  // getLanguage() exists from Obsidian 1.8; older versions keep the setting in localStorage.
+  const language = (typeof getLanguage === "function" ? getLanguage() : window.localStorage.getItem("language")) || "en";
+  const strings = language.toLowerCase().startsWith("zh") ? STRINGS.zh : STRINGS.en;
+  return strings[key];
+}
 
 module.exports = class MermaidFlowZoomPlugin extends Plugin {
   async onload() {
@@ -129,10 +155,10 @@ class MermaidZoomInstance {
     this.toolbar = document.createElement("div");
     this.toolbar.className = "mfz-toolbar";
 
-    this.zoomOutButton = this.button("−", "缩小", () => this.zoomAtCenter(1 / ZOOM_STEP));
-    this.zoomInButton = this.button("+", "放大", () => this.zoomAtCenter(ZOOM_STEP));
-    this.resetButton = this.button("⟲", "重置并自适应", () => this.reset());
-    this.fullscreenButton = this.button("⛶", "全屏查看", () => this.toggleFullscreen());
+    this.zoomOutButton = this.button("−", t("zoomOut"), () => this.zoomAtCenter(1 / ZOOM_STEP));
+    this.zoomInButton = this.button("+", t("zoomIn"), () => this.zoomAtCenter(ZOOM_STEP));
+    this.resetButton = this.button("⟲", t("reset"), () => this.reset());
+    this.fullscreenButton = this.button("⛶", t("fullscreen"), () => this.toggleFullscreen());
 
     this.toolbar.append(
       this.zoomOutButton,
@@ -143,7 +169,7 @@ class MermaidZoomInstance {
 
     this.help = document.createElement("div");
     this.help.className = "mfz-help";
-    this.help.textContent = "滚轮缩放，拖拽平移，Shift/横向滚轮左右移动，拖动右下角调整大小";
+    this.help.textContent = t("help") + (this.diagramKind === "sequence" ? t("sequenceHelp") : "");
 
     this.originalParent.insertBefore(this.container, this.originalNextSibling);
     this.content.appendChild(this.svg);
